@@ -1,0 +1,58 @@
+{% extends 'ecom/base.html' %}
+{% block content %}
+    <!-- Header -->
+    <header class="bg-dark py-5 mb-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <h1 class="text-white text-center">Order Details</h1>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Order Card Section -->
+    <section class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm" style="background-color: #f8f9fa; border-radius: 15px;">
+                    <div class="card-header bg-primary text-white" style="border-radius: 15px 15px 0 0;">
+                        <h5 class="mb-0">Order #{{ order.id }} - ${{order.amount_paid}}</h5>
+                    </div>
+                    <div class="card-body" style="padding: 30px;">
+                        <p>Email: <strong>{{ order.email }}</strong></p>
+                        {% if order.date_shipped %}
+                            <p>Date Shipped: <strong>{{order.date_shipped}}</strong></p>
+                        {% else %}
+                            <p>Date Ordered: <strong>{{order.order_date}}</strong></p>
+                        {% endif %}
+                        <p>Full Name: <strong>{{ order.full_name }}</strong></p>
+                        <p>Shipping Address: <strong>{{ order.shipping_address }}</strong></p>
+                        <hr>
+                        <h6>Items:</h6>
+                        {% for item in items %}
+                            <p>{{ item.product }} - {{ item.quantity }} - ${{ item.price }}</p>
+                        {% endfor %}
+
+                        {% if not order.shipped %}
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="shipping_status" value="true">
+                                <button type="submit" class="btn btn-success">Mark As Shipped</button>
+                            </form>
+                        {% else %}
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="shipping_status" value="false">
+                                <button type="submit" class="btn btn-danger">Mark As Not Shipped</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <a href="{% url 'ecom:home' %}" class="btn btn-primary" style="padding: 10px 20px;">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

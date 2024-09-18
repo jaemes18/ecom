@@ -1,0 +1,66 @@
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+    <div class="container px-4 px-lg-5">
+        <a class="navbar-brand fw-bold text-uppercase" href="{% url 'ecom:home' %}">JAE STORE</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                <li class="nav-item"><a class="nav-link active fw-semibold" aria-current="page" href="{% url 'ecom:home' %}">Home</a></li>
+                <li class="nav-item"><a class="nav-link fw-semibold" href="{% url 'ecom:about' %}">About</a></li>
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle fw-semibold" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">User Profile</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="{% url 'ecom:update_info' %}">Update Info</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ecom:update_user' %}">Update Profile</a></li>
+                    </ul>
+                </li>
+                {% if user.is_superuser %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle fw-semibold" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Orders</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="{% url 'payment:shipped_dash' %}">Shipped Orders</a></li>
+                        <li><a class="dropdown-item" href="{% url 'payment:not_shipped_dash' %}">Unshipped Orders</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+                <li class="nav-item"><a class="nav-link fw-semibold" href="{% url 'ecom:update_password' %}">Update Password</a></li>
+                <li class="nav-item"><a class="nav-link text-danger fw-semibold" href="{% url 'ecom:logout' %}">Logout</a></li>
+                {% else %}
+                <li class="nav-item"><a class="nav-link fw-semibold" href="{% url 'ecom:login' %}">Login</a></li>
+                <li class="nav-item"><a class="nav-link fw-semibold" href="{% url 'ecom:register' %}">Register</a></li>
+                {% endif %}
+                <li class="nav-item"><a class="nav-link fw-semibold" href="{% url 'ecom:search' %}">Search</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle fw-semibold" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="">All Products</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="{% url 'ecom:category' 'Phones' %}">Phones</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ecom:category' 'Shoes' %}">Shoes</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ecom:category' 'Male-clothing' %}">Male Clothing</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ecom:category' 'Female-clothing' %}">Female clothing</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ecom:category' 'Furniture' %}">Furniture</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ecom:category' 'watch' %}">watch</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ecom:category' 'Hair-extentions' %}">Hair extentions</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ecom:category' 'Electronics' %}">Electronics</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ecom:category' 'Kids' %}">Kids</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ecom:category' 'Bags' %}">Bags</a></li>
+
+                    </ul>
+                </li>
+            </ul>
+            <form class="d-flex align-items-center">
+                <a href="{% url 'cart:cart_summary' %}" class="btn btn-outline-dark position-relative">
+                    <i class="bi bi-cart-fill me-1"></i>
+                    Cart
+                    <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart_quantity">  {{ cart_quantity }}</span>
+                </a>
+            </form>
+        </div>
+    </div>
+</nav>

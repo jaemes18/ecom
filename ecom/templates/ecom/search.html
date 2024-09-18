@@ -1,0 +1,73 @@
+{% extends 'ecom/base.html' %}
+
+{% block content %}
+   <!-- Header-->
+   <header class="bg-dark py-5">
+       <div class="container px-4 px-lg-5 my-5">
+           <div class="text-center text-white">
+               <h1 class="display-4 fw-bolder">Search</h1>
+               <p class="lead fw-normal text-white-50 mb-0">Search Product.......</p>
+           </div>
+       </div>
+   </header>
+
+   <br/>
+   <div class="container">
+       <div class="row justify-content-center">
+           <div class="col-8">
+               <div class="card">
+                   <div class="card-body">
+                       <h5 class="card-title">Search Products</h5>
+                       <form method="POST" action="{% url 'ecom:search' %}">
+                           {% csrf_token %}
+                           <div class="m-3">
+                               <input type="text" class="form-control" placeholder="Search For Products name" name="searched">
+                           </div>
+                           <button type="submit" class="btn btn-secondary">Search</button>
+                       </form>
+
+                       <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                       {% if searched %}
+                           <div class="row mt-4">
+                               {% for product in searched %}
+                                   <div class="col mb-5">
+                                       <div class="card h-100">
+                                           {% if product.is_sale %}
+                                               <!-- Sale badge-->
+                                               <div class="badge bg-light text-black position-absolute" style="top: 0.5rem; right: 0.5rem;">Sale</div>
+                                           {% endif %}
+                                           <!-- Product image-->
+                                           <img class="card-img-top" src="{{ product.image.url }}" alt="..." />
+                                           <!-- Product details-->
+                                           <div class="card-body p-4">
+                                               <div class="text-center">
+                                                   <!-- Product name-->
+                                                   <h5 class="fw-bolder">{{ product.name }}</h5>
+                                                   <!-- Product price-->
+                                                   {% if product.is_sale %}
+                                                       <span class="text-muted text-decoration-line-through">${{ product.price }}</span>
+                                                       <span class="text-danger">${{ product.sale_price }}</span>
+                                                   {% else %}
+                                                       ${{ product.price }}
+                                                   {% endif %}
+                                               </div>
+                                           </div>
+                                           <!-- Product actions-->
+                                           <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                               <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'ecom:product' product.id %}">View Product</a></div>
+                                           </div>
+                                       </div>
+                                   </div>
+                               {% endfor %}
+                           </div>
+                       {% else %}
+                           <p class="text-center mt-4">No products found.</p>
+                       {% endif %}
+                           </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+   <br/><br/><br/><br/>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'ecom/base.html' %}
+{% block content %}
+
+<div class="container my-5">
+    <div class="card mb-3 shadow-sm border-0" style="max-width: 540px;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="{{ products.image.url }}" class="img-fluid rounded-start" alt="{{ products.name }}">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">{{ products.name }}</h5>
+                    <p class="card-text text-muted">{{ products.description }}</p>
+                    {% if product.is_sale %}
+                        <!-- Product price for sale -->
+                        <h5 class="fw-bold text-danger">
+                            <strike class="text-muted">${{ products.price }}</strike> &nbsp; ${{ products.sale_price }}
+                        </h5>
+                    {% else %}
+                        <!-- Product price without sale -->
+                        <h5 class="fw-bold">${{ products.price }}</h5>
+                    {% endif %}
+
+                    <p class="card-text">
+                        <small class="text-body-secondary"></small>
+                    </p>
+                    <!-- Quantity selection -->
+                    <div class="row my-3">
+                        <div class="col-md-4">
+                            <label for="qty-cart" class="form-label">Quantity:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select class="form-select form-select-sm" id="qty-cart">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'ecom:home' %}" class="btn btn-secondary">Home</a>
+                        <button type="button" value="{{ products.id }}" class="btn btn-dark" id="add-cart">Add To Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Include jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Script for adding to cart -->
+<script>
+$(document).on('click', '#add-cart', function(e) {
+    e.preventDefault();
+    $.ajax({
+        type: 'POST',
+        url: '{% url "cart:cart_add" %}',
+        data: {
+            product_id: $('#add-cart').val(),
+            product_qty: $('#qty-cart option:selected').text(),
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            action: 'post'
+        },
+        success: function(json) {
+            document.getElementById("cart_quantity").textContent = json.Qty;
+        },
+        error: function(xhr, errmsg, err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+        }
+    });
+});
+</script>
+{% endblock %}
